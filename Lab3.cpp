@@ -17,8 +17,10 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Character& character) {
-        os << "Character: " << character.name << ", HP: " << character.health
-           << ", Attack: " << character.attack << ", Defense: " << character.defense;
+        os << "Персонаж: " << character.name
+           << ", ХП: " << character.health
+           << ", Aтака: " << character.attack
+           << ", Защита: " << character.defense;
         return os;
     }
 };
@@ -29,11 +31,13 @@ private:
     int damage;
 
 public:
-    Weapon(const std::string& n, int d, float w)
-        : name(n), damage(d) {}
+    Weapon(const std::string& n, int d) : name(n), damage(d) {}
+
+    std::string getName() const { return name; }
+    int getDamage() const { return damage; }
 
     Weapon operator+(const Weapon& other) const {
-        std::string newName = name + "+" + other.name;
+        std::string newName = name + "-" + other.name;
         int newDamage = damage + other.damage;
         return Weapon(newName, newDamage);
     }
@@ -42,39 +46,45 @@ public:
         return damage > other.damage;
     }
 
-    void displayInfo() const {
-        std::cout << "Weapon: " << name << ", Damage: " <<
-        damage << ";
+    bool operator==(const Weapon& other) const {
+        return name == other.name && damage == other.damage;
+    }
+    
+    friend std::ostream& operator<<(std::ostream& os, const Weapon& weapon) {
+        os << "Оружие: " << weapon.name << ", Урон: " << weapon.damage;
+        return os;
     }
 };
 
 int main() {
-    Character hero1("Hero", 100, 20, 10);
-    Character hero2("Hero", 100, 20, 10);
-    Character hero3("Warrior", 150, 25, 15);
+    Character hero1("Герой", 100, 20, 10);
+    Character hero2("Герой", 100, 25, 15); 
 
     if (hero1 == hero2) {
-        std::cout << "Hero1 and Hero2 are the same!\n";
+        std::cout << "Герой 1 и Герой 2 одинаковы!\n";
     }
-    if (!(hero1 == hero3)) {
-        std::cout << "Hero1 and Hero3 are different!\n";
+    else {
+        std::cout << "Герой 1 и Герой 2 разные!\n";
     }
 
     std::cout << hero1 << std::endl;
-    
-    
-    Weapon sword("Sword", 30);
-    Weapon bow("Bow", 20);
-    
+
+    Weapon sword("Меч", 40);
+    Weapon bow("Лук", 30);
+
     Weapon combined = sword + bow;
-    combined.displayInfo();
-    
+    std::cout << "Парное оружие: " << combined << std::endl;
+
     if (sword > bow) {
-            std::cout << "\nSword is stronger than Bow\n";
-        } else {
-            std::cout << "\nBow is stronger than Sword\n";
-        }
-    
+        std::cout << sword.getName() << " сильнее чем " << bow.getName() << std::endl;
+    }
+
+    if (sword == Weapon("Меч", 40)) {
+        std::cout << "Меч соответствует ожидаемому оружию.\n";
+    }
+
+    std::cout << sword << std::endl;
+    std::cout << bow << std::endl;
+
     return 0;
 }
-
